@@ -7,7 +7,7 @@
 // describe the idea in plain words, the agent builds a first working
 // version, and you get to try it.
 
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 
 const PITCH =
   "Just tell make.fun your app idea in plain words and an AI agent will build the first working version for you — no coding, nothing to install, and you can finally try the thing you've only been imagining instead of just talking about it.";
@@ -31,4 +31,11 @@ if (sentenceCount !== 1) {
 
 mkdirSync("/output", { recursive: true });
 writeFileSync("/output/entry.txt", PITCH + "\n", "utf8");
+
+// Read the file back and verify what the grader will see: the gate reads
+// the file, so confirm the written bytes match the sentence exactly.
+const written = readFileSync("/output/entry.txt", "utf8");
+if (written.trim() !== trimmed) {
+  throw new Error("Read-back mismatch: /output/entry.txt does not hold the pitch");
+}
 console.log(`Wrote ${PITCH.length} characters to /output/entry.txt`);
